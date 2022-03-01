@@ -61,6 +61,47 @@ Then, see if you can successfully run the example in test/simple_test.py. These 
 
 To test/use as a general user would do, you can use the pip install instructions in the previous section. 
 
+
+
+## Exact method I used to get the coupling scan to work locally with lhapdf (Josh):
+
+1.  
+python -m venv thisvenv
+source thisvenv/bin/activate
+pip install --upgrade pip
+pip install matplotlib
+pip install pybind11
+pip install numpy
+pip install scipy
+
+2. from https://lhapdf.hepforge.org/install.html: 
+wget https://lhapdf.hepforge.org/downloads/?f=LHAPDF-6.3.0.tar.gz -O LHAPDF-6.3.0.tar.gz
+tar xf LHAPDF-6.3.0.tar.gz
+cd LHAPDF-6.3.0
+./configure --prefix=~/LHAPDF
+
+3. 
+export PATH=$PATH:~/LHAPDF/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/LHAPDF/lib
+export PYTHONPATH=$PYTHONPATH:~/LHAPDF/lib/python3.9/site-packages (NOTE: after install, check that this python directory is the correct version)
+export LHAPDF_LIBRARY_PATH=$LHAPDF_LIBRARY_PATH:~/LHAPDF/lib   (I set this too just to be sure)
+
+4.
+make
+make install
+
+5. 
+cd ~/
+git clone https://github.com/LHC-DMWG/DMWG-couplingScan-code.git
+cd DMWG-couplingScan-code
+pip install -e .
+
+6. Manually acquire the pdf file:
+wget http://lhapdfsets.web.cern.ch/lhapdfsets/current/NNPDF30_nlo_as_0118.tar.gz -O- | tar xz -C ~/LHAPDF/share/LHAPDF
+
+7. 
+python ./test/simple_test.py
+
 ## Usage examples
 
 See simple working examples here: https://github.com/LHC-DMWG/DMWG-couplingScan-code/blob/master/test/simple_test.py
